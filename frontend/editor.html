@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Dokumen PDF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Area untuk PDF viewer, posisinya relatif agar tanda tangan bisa menumpuk di atasnya */
+        #pdf-viewer { position: relative; }
+        /* Style untuk kanvas PDF */
+        #pdf-canvas {
+            border: 1px solid #ccc;
+            max-width: 100%; /* Kunci: pastikan canvas tidak lebih lebar dari kontainernya */
+            height: auto;    /* Kunci: biarkan tinggi menyesuaikan secara otomatis */
+        }
+        /* Style untuk gambar tanda tangan yang bisa digeser */
+        .signature-image {
+            position: absolute;
+            cursor: move;
+            border: 2px dashed #3498db;
+            touch-action: none; /* Penting untuk Interact.js */
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 font-sans">
+
+    <div class="container mx-auto p-2 sm:p-4">
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-4">Editor Dokumen</h1>
+        <div class="text-center mb-4 text-sm sm:text-base">
+            <a href="index.html" class="text-blue-500 hover:underline">&larr; Buat Tanda Tangan Baru</a> |
+            <a href="galeri.html" class="text-blue-500 hover:underline">Lihat Galeri &rarr;</a>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div class="flex flex-col items-center sm:flex-row">
+                <label for="pdf-upload" class="font-bold mb-2 sm:mb-0 sm:mr-2">1. Unggah PDF:</label>
+                <input type="file" id="pdf-upload" accept="application/pdf" class="text-sm">
+            </div>
+            <button id="save-pdf" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400 w-full sm:w-auto" disabled>
+                3. Simpan & Unduh
+            </button>
+            <div id="status" class="w-full text-center mt-2 font-semibold text-sm"></div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-4">
+            
+            <div class="flex-grow bg-white p-2 sm:p-4 rounded-lg shadow-md overflow-x-auto">
+                <h2 class="font-bold text-lg sm:text-xl mb-2 text-center">Dokumen Anda</h2>
+                <div id="pdf-viewer" class="flex justify-center">
+                    <canvas id="pdf-canvas"></canvas>
+                </div>
+
+                <div id="pdf-navigation" class="mt-4 text-center items-center justify-center gap-4 hidden">
+                    <button id="prev-page" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-300">
+                        &larr; Sebelumnya
+                    </button>
+                    <span id="page-num" class="font-semibold"></span>
+                    <button id="next-page" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded disabled:bg-gray-300">
+                        Berikutnya &rarr;
+                    </button>
+                </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-64 bg-white p-4 rounded-lg shadow-md flex-shrink-0">
+                <h2 class="font-bold text-lg sm:text-xl mb-2 text-center">2. Pilih Tanda Tangan</h2>
+                <div id="signature-gallery" class="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-col items-center gap-2 max-h-48 lg:max-h-96 overflow-y-auto">
+                    <p class="col-span-full">Memuat...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="editor.js"></script>
+</body>
+</html>
